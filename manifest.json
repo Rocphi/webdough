@@ -1,0 +1,20 @@
+{
+  "manifest_version":2,
+  "name":"Web-playdough",
+  "version":"1.0",
+  "description":"Web-playdough client side extension",
+  "icons":{"130":"/images/icon.png"},
+  "author":"Pengfei Rocphi Wang",
+
+  "browser_action": {
+    "default_icon": "/images/icon.png",
+    "default_popup": "popup.html"
+  },
+
+  "content_scripts": [ {
+     "js": [ "jquery-3.2.1.js"],
+     "matches": [ "http://*/*", "https://*/*"]
+   }],
+   "permissions": [ "tabs", "webNavigation", "webRequest", "webRequestBlocking", "contextMenus", "storage", "*://*/*" ]
+
+}
