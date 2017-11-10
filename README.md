@@ -1,5 +1,5 @@
 # webdough
 
-This is for the paper of Web-Dough
+This is for the paper of Web-Dough.
 
-Web-Dough related files
+Documents are Web-Dough related files.
