@@ -11,10 +11,11 @@
     "default_popup": "popup.html"
   },
 
-  "content_scripts": [ {
-     "js": [ "jquery-3.2.1.js"],
+  "content_scripts": [{
+     "js": [ "js/jquery-3.2.1.js", "js/content.js"],
      "matches": [ "http://*/*", "https://*/*"]
-   }],
-   "permissions": [ "tabs", "webNavigation", "webRequest", "webRequestBlocking", "contextMenus", "storage", "*://*/*" ]
+  }],
+  
+  "permissions": [ "tabs", "webNavigation", "webRequest", "webRequestBlocking", "contextMenus", "storage", "*://*/*" ]
 
 }

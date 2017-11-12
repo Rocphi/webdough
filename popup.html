@@ -4,8 +4,9 @@
   <head>
     <title>Getting Started Extension's Popup</title>
     <link rel="stylesheet" type="text/css" href="css/style.css">
-    <script src="jquery-3.2.1.js"></script>
+    <script src="js/jquery-3.2.1.js"></script>
     <script src="js/popup.js"></script>
+    <script src="js/jscolor.min.js"></script>
   </head>
 
   <body>
@@ -65,8 +66,8 @@
         <table>
           <tr>
             <td>Color:</td>
-            <td><input type="text" disabled="True" id="bgcolor_before" value="test"></input></td>
-            <td><input type="text" id="bgcolor_after"></input></td>
+            <td><input type="text" disabled="True" id="bgcolor_before"></input></td>
+            <td><input type="text" id="bgcolor_after" class="jscolor"  value="ffcc00"></input></td>
           </tr>
           <tr>
             <td>Image url:</td>
@@ -95,7 +96,7 @@
     <br/>
     <div class="buttons">
       <button>Start</button>
-      <button>Refresh</button>
+      <button id="refresh">Refresh</button>
       <button>Set</button>
     </div>
 

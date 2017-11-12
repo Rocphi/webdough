@@ -5,6 +5,7 @@
 // 'use strict';
 
 $(function(){
+
   // var current_tab_id;
   chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
     // alert(tabs[0].id);
@@ -88,8 +89,25 @@ $(function(){
       $("#bgimg_before").val(font_results[0][5]);
       $("#bgimg_after").val(font_results[0][5]);
 
-
-
     });
   });
+
+  var color = $('#bgcolor_after').val();
+
+  $("#bgcolor_after").on("change paste keyup", function(){
+    color = $(this).val();
+    log("haha");
+  });
+
+  $("#refresh").click(function(){
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
+      chrome.tabs.sendMessage(tabs[0].id, {todo: "changeColor", clickedColor: color});
+    });
+  });
+
+
 });
+
+
+
+
