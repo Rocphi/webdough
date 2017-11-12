@@ -1,4 +1,4 @@
-$("body").css("background-color", "#68FFE1");
+// $("body").css("background-color", "#68FFE1");
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse){
 	if ( request.todo == "changeColor"){
