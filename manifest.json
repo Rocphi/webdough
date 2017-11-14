@@ -13,7 +13,8 @@
 
   "content_scripts": [{
      "js": [ "js/jquery-3.2.1.js", "js/content.js"],
-     "matches": [ "http://*/*", "https://*/*"]
+     "matches": [ "http://*/*", "https://*/*"],
+     "css": ["css/content.css"]
   }],
   
   "permissions": [ "tabs", "webNavigation", "webRequest", "webRequestBlocking", "contextMenus", "storage", "*://*/*" ]

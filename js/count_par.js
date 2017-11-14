@@ -30,7 +30,6 @@ function hex(x) {
 }
 
 
-
 /* text/words */
 var font_size = [];
 var font_color = [];
@@ -42,7 +41,6 @@ $("*").each(function(index){
   if(! isInArray(font_size,size)){
     font_size.push(size);
   }
-
 
   var color = $(this).css('color');
   color = rgb2hex(color);
@@ -72,5 +70,7 @@ results.push(font_color);
 results.push(line_spacing);
 results.push(rgb2hex($("body").css("background-color")));
 results.push($("body").css("background-image"));
+
+
 
 results;

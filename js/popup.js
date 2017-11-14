@@ -93,15 +93,20 @@ $(function(){
   });
 
   var color = $('#bgcolor_after').val();
+  var imgFilters = $('#imgFilter').val();
 
   $("#bgcolor_after").on("change paste keyup", function(){
     color = $(this).val();
-    log("haha");
+  });
+
+   $("#imgFilter").on("change", function(){
+    imgFilters = $(this).val();
   });
 
   $("#refresh").click(function(){
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
       chrome.tabs.sendMessage(tabs[0].id, {todo: "changeColor", clickedColor: color});
+      chrome.tabs.sendMessage(tabs[0].id, {todo: "filterImg", clickedImgFilters: imgFilters});
     });
   });
 
