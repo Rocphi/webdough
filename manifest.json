@@ -16,7 +16,12 @@
      "matches": [ "http://*/*", "https://*/*"],
      "css": ["css/content.css"]
   }],
+
+  "background": {
+    "scripts": ["js/eventPage.js"],
+    "persistent": false
+  },
   
-  "permissions": [ "tabs", "webNavigation", "webRequest", "webRequestBlocking", "contextMenus", "storage", "*://*/*" ]
+  "permissions": [ "tabs", "webNavigation", "webRequestBlocking", "contextMenus", "storage", "*://*/*" ]
 
 }
