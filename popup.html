@@ -4,8 +4,9 @@
   <head>
     <title>Getting Started Extension's Popup</title>
     <link rel="stylesheet" type="text/css" href="css/style.css">
-    <script src="jquery-3.2.1.js"></script>
+    <script src="js/jquery-3.2.1.js"></script>
     <script src="js/popup.js"></script>
+    <script src="js/jscolor.min.js"></script>
   </head>
 
   <body>
@@ -14,15 +15,9 @@
       <div class="category" style="border-color:#a1a2af;">
         <table id="font_table">
           <tr id="font_table_header">
-            <th>
-              Type
-            </th>
-            <th>
-              Initial
-            </th>
-            <th>
-              Modified
-            </th>
+            <th>Type</th>
+            <th>Initial</th>
+            <th>Modified</th>
           </tr>
 
           <!-- Font Size begins here-->
@@ -30,8 +25,8 @@
           <tr id="font_size_row_first">
             <td>Font Size: </td>
           </tr>
-
-          <!-- <tr class="font_size_row">
+<!-- 
+          <tr class="font_size_row">
             <td> </td>
             <td>
               <input type="text" disabled="true"/>
@@ -71,13 +66,13 @@
         <table>
           <tr>
             <td>Color:</td>
-            <td><input type="text" disabled="True"></input></td>
-            <td><input type="text"></input></td>
+            <td><input type="text" disabled="True" id="bgcolor_before"></input></td>
+            <td><input type="text" id="bgcolor_after" class="jscolor"  value="ffcc00"></input></td>
           </tr>
           <tr>
             <td>Image url:</td>
-            <td><input type="text" disabled="True"></input></td>
-            <td><input type="text" ></input></td>
+            <td><input type="text" disabled="True" id="bgimg_before"></input></td>
+            <td><input type="text" id="bgimg_after"></input></td>
           </tr>
         </table>
       </div>
@@ -90,7 +85,14 @@
         <table>
           <tr>
             <td>Filter:</td>
-            <td><select>
+            <td><select id="imgFilter">
+              <option value="grayscale">grayscale</option>
+              <option value="saturate">saturate</option>
+              <option value="hue-rotate">hue-rotate</option>
+              <option value="invert">invert</option>
+              <option value="blur">blur</option>
+              <option value="opacity">opacity</option>
+              <option value="drop-shadow">drop-shadow</option>
             </select></td>
           </tr>
         </table>
@@ -101,13 +103,13 @@
     <br/>
     <div class="buttons">
       <button>Start</button>
-      <button>Refresh</button>
+      <button id="refresh">Refresh</button>
       <button>Set</button>
     </div>
 
     <br/>
     <div class="footer_div" text-align="right">
-      <img src="images/icon.png" height="15" width="15" >  WebDough 1.0</img>
+      <img src="images/icon.png" height="15" width="15" >WebDough 1.0</img>
     </div>
 
   </body>

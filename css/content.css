@@ -1,0 +1,7 @@
+.grayscale{-webkit-filter:grayscale(1);}
+.saturate{-webkit-filter:saturate(3);}
+.hue-rotate{-webkit-filter:hue-rotate(90deg);}
+.invert{-webkit-filter:invert(1);}
+.blur{-webkit-filter:blur(1px);}
+.opacity{-webkit-filter:opacity(.2);}
+.drop-shadow{-webkit-filter:drop-shadow(5px 5px 5px #ccc);}

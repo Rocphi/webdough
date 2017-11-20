@@ -2,6 +2,8 @@
 
 // Test the item is in array or not, if not push it to the array
 
+'use strict';
+
 function isInArray(arr,value){
     for(var i = 0; i < arr.length; i++){
         if(value === arr[i]){
@@ -11,17 +13,21 @@ function isInArray(arr,value){
     return false;
 }
 
-// function hex(x) {
-//   var hexDigits = new Array；
-//   ("0","1","2","3","4","5","6","7","8","9","a","b","c","d","e","f");
-//   return isNaN(x) ? "00" : hexDigits[(x - x % 16) / 16] + hexDigits[x % 16];
-// }
-//
 // function rgb2hex(rgb) {
-//   rgb = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+//   rgb = rgb.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)\)$/);
 //   return "#" + hex(rgb[1]) + hex(rgb[2]) + hex(rgb[3]);
 // }
 
+function rgb2hex(rgb) {
+  rgb = rgb.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)*/);
+  return "#" + hex(rgb[1]) + hex(rgb[2]) + hex(rgb[3]);
+}
+
+function hex(x) {
+  var hexDigits = new Array
+  ("0","1","2","3","4","5","6","7","8","9","a","b","c","d","e","f"); 
+  return isNaN(x) ? "00" : hexDigits[(x - x % 16) / 16] + hexDigits[x % 16];
+}
 
 
 /* text/words */
@@ -36,8 +42,8 @@ $("*").each(function(index){
     font_size.push(size);
   }
 
-
   var color = $(this).css('color');
+  color = rgb2hex(color);
   if(! isInArray(font_color,color)){
     font_color.push(color);
   }
@@ -62,5 +68,9 @@ results.push(font_size);
 results.push(font_type);
 results.push(font_color);
 results.push(line_spacing);
+results.push(rgb2hex($("body").css("background-color")));
+results.push($("body").css("background-image"));
 
-results
+
+
+results;
