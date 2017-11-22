@@ -2,9 +2,34 @@
 // 1. Get the current tab;
 // 2. Do statistics of font_size,font_color,font_family,line_spacing
 
-// 'use strict';
+
+function strMapToObj(strMap) {
+    let obj = Object.create(null);
+    for (let [k, v] of strMap) {
+        obj[k] = v;
+    }
+    return obj;
+}
+
+// map to Json
+function mapToJson(map) {
+    return JSON.stringify(strMapToObj(map));
+}
+
+function shuffle(array) {
+    return array.sort(function() {
+        return Math.random() - 0.5
+    });
+}
+
+
+
+
 
 $(function(){
+
+  var changeFontSize = new Map();
+  // var changeFontSize = new Map();
 
   // var current_tab_id;
   chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
@@ -20,9 +45,11 @@ $(function(){
             <input type="text" value="'+font_results[0][0][i]+'" disabled="true"/>\
           </td>\
           <td>\
-            <input type="text" value="'+font_results[0][0][i]+'"/>\
+            <input type="text" class="mySize" id="' + font_results[0][0][i] + '"value="'+font_results[0][0][i]+'"/>\
           </td>\
         </tr>';
+
+        changeFontSize.set(font_results[0][0][i], font_results[0][0][i]);
       }
       font_size_rows = font_size_rows + "<tr></tr>";
       $("#font_size_row_first").children("td:first-child").attr("rowspan",String(font_results[0][0].length));
@@ -78,34 +105,81 @@ $(function(){
 
       $("#line_spacing_row_first").children("td:first-child").attr("rowspan",String(font_results[0][3].length));
       $("#line_spacing_row_first").after(line_spacing_rows);
-      console.log(font_results[0]);
+      // console.log(font_results[0]);
       // console.log(font_results[0].length);
 
       //background-color
       $("#bgcolor_before").val(font_results[0][4]);
-      $("#bgcolor_after").val(font_results[0][4]);
+      if ($("#bgcolor_before").val() == "ffffff"){
+        $("#bgcolor_after").val("transparent");
+      } else {
+        $("#bgcolor_after").val(font_results[0][4]);
+      }
 
       //background-image
       $("#bgimg_before").val(font_results[0][5]);
       $("#bgimg_after").val(font_results[0][5]);
 
+      var color = $('#bgcolor_after').val();
+      $("#bgcolor_after").on("change paste keyup", function(){
+        color = $(this).val();
+      });
+
+      // get the to be changed font-size
+      $(".mySize").change(function(){
+        if (changeFontSize.has($(this).attr("id"))) {
+          changeFontSize.set($(this).attr("id"), $(this).val());
+        }
+      });
+
+
+      chrome.storage.sync.get("mainSize", function(webdough){
+        console.log("haha");
+        if (webdough.mainSize) {
+          console.log(webdough.mainSize);
+          $(".mySize").each(function(){
+            if ($(this).val() == webdough.mainSize) {
+              $(this).css('background-color', "#E2FFB0");
+            }
+          });
+        }
+      });
+
+
+
+
+
+
+
+
+
+
+      // get the safe font-type
+      // var safeTypes = ["Arial Black", "Verdana", "Comic Sans MS", "Lucida Console", "Trebuchet MS", "Tahoma", "Impact"];
+      // safeTypes = shuffle(safeTypes);
+
+      console.log(mapToJson(changeFontSize));
+
+      $("#refresh").click(function(){
+        chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
+          chrome.tabs.sendMessage(tabs[0].id, {todo: "FontSizeChange", newSize: mapToJson(changeFontSize)});
+          chrome.tabs.sendMessage(tabs[0].id, {todo: "changeColor", clickedColor: color});
+          // chrome.tabs.sendMessage(tabs[0].id, {todo: "changeFontType", safeTypes: safeTypes});
+          // chrome.tabs.sendMessage(tabs[0].id, {todo: "changeFontSpacing", safeTypes: safeTypes});
+        });
+      });
+
     });
   });
 
-  var color = $('#bgcolor_after').val();
   var imgFilters = $('#imgFilter').val();
 
-  $("#bgcolor_after").on("change paste keyup", function(){
-    color = $(this).val();
-  });
-
-   $("#imgFilter").on("change", function(){
+  $("#imgFilter").on("change", function(){
     imgFilters = $(this).val();
   });
 
   $("#refresh").click(function(){
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
-      chrome.tabs.sendMessage(tabs[0].id, {todo: "changeColor", clickedColor: color});
       chrome.tabs.sendMessage(tabs[0].id, {todo: "filterImg", clickedImgFilters: imgFilters});
     });
   });

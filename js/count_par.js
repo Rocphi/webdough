@@ -5,6 +5,9 @@
 'use strict';
 
 function isInArray(arr,value){
+    if (arr.length == 0){
+      return false;
+    }
     for(var i = 0; i < arr.length; i++){
         if(value === arr[i]){
             return true;
@@ -20,7 +23,7 @@ function isInArray(arr,value){
 
 function rgb2hex(rgb) {
   rgb = rgb.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)*/);
-  return "#" + hex(rgb[1]) + hex(rgb[2]) + hex(rgb[3]);
+  return hex(rgb[1]) + hex(rgb[2]) + hex(rgb[3]);
 }
 
 function hex(x) {
@@ -34,10 +37,11 @@ function hex(x) {
 var font_size = [];
 var font_color = [];
 var font_type = [];
-var line_spacing = [];
+var font_spacing = [];
 
 $("*").each(function(index){
   var size = $(this).css('font-size');
+  // var spacing = $(this).css('line-height');
   if(! isInArray(font_size,size)){
     font_size.push(size);
   }
@@ -49,28 +53,42 @@ $("*").each(function(index){
   }
 
   var type = $(this).css('font-family');
+  // console.log(typeof(type));
   if(! isInArray(font_type,type)){
     font_type.push(type);
   }
 
   var spacing = $(this).css('line-height');
-  if(! isInArray(line_spacing,spacing)){
-    line_spacing.push(spacing);
+  if (! isNaN(parseFloat(spacing))){
+    var space = parseFloat(spacing) / parseFloat(size);
+    if(! isInArray(font_spacing,space)){
+      font_spacing.push(space);
+    }
   }
 
-
-  // font_size = testIsInArray(font_size,size);
-  // alert(size+color+type+spacing);
 });
+
+
 
 var results = [];
 results.push(font_size);
 results.push(font_type);
 results.push(font_color);
-results.push(line_spacing);
+results.push(font_spacing);
 results.push(rgb2hex($("body").css("background-color")));
 results.push($("body").css("background-image"));
 
 
+// var bgcolor = rgb2hex($("body").css("background-color"));
+// console.log(bgcolor);
+// if (bgcolor == "ffffff"){
+//   $("body").css("background-color", "none");
+//   // $("body").css("background-image", "url(https://img1.doubanio.com/img/musician/large/22817.jpg)").css("background-repeat", "no-repeat").css("background-position", "right").css("background-attachment", "fixed");
+// }
+
+
 
 results;
+
+
+
