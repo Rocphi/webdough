@@ -11,6 +11,16 @@ function jsonToMap(jsonStr){
     return  objToStrMap(JSON.parse(jsonStr));
 }
 
+document.onmousedown = function(e) {
+	var e = e ? e : window.event;
+	var tar = e.srcElement || e.target;
+	// var tarClass = tar.className;
+	// var tarId = tar.id;
+	var fontSize = $(tar).css("font-size");
+	// console.log(tarClass);
+	console.log(fontSize);
+	chrome.storage.sync.set({"mainSize": fontSize});
+}
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse){
 	
