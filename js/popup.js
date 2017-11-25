@@ -17,9 +17,34 @@ function mapToJson(map) {
 }
 
 function shuffle(array) {
-    return array.sort(function() {
-        return Math.random() - 0.5
-    });
+    let counter = array.length;
+
+    // While there are elements in the array
+    while (counter > 0) {
+        // Pick a random index
+        let index = Math.floor(Math.random() * counter);
+
+        // Decrease counter by 1
+        counter--;
+
+        // And swap the last element with it
+        let temp = array[counter];
+        array[counter] = array[index];
+        array[index] = temp;
+    }
+
+    return array;
+}
+
+
+function optimizedShuffle(map, mainSize, optimizer){
+  var diff = parseFloat(optimizer) - parseFloat(mainSize);
+  for (var [key,value] of map) {
+    value = parseFloat(value) + parseFloat(diff);
+    value = value + "px";
+    map.set(key, value);
+  }
+  return map;
 }
 
 
@@ -28,8 +53,13 @@ function shuffle(array) {
 
 $(function(){
 
+  var mainSize = "";
   var changeFontSize = new Map();
-  // var changeFontSize = new Map();
+  var safeTypes = ["Arial", "Verdana", "Trebuchet MS"];
+  // var safeSizes = ["16px", "19px", "22px"];
+  var safeSizes = ["19px", "16px"];
+  // console.log(safeTypes);
+
 
   // var current_tab_id;
   chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
@@ -37,6 +67,12 @@ $(function(){
     chrome.tabs.executeScript(tabs[0].id, {file: "js/count_par.js"},function(font_results){
       //font_results[0] includes font_size,font_color,font_family,line_spacing and background-color in order.
       //font_size
+
+      safeTypes = shuffle(safeTypes);
+      safeSizes = shuffle(safeSizes);
+
+
+
       var font_size_rows = "";
       for(i=1;i<font_results[0][0].length;i++){
 
@@ -134,12 +170,21 @@ $(function(){
 
 
       chrome.storage.sync.get("mainSize", function(webdough){
-        console.log("haha");
         if (webdough.mainSize) {
-          console.log(webdough.mainSize);
+          // console.log(webdough.mainSize);
           $(".mySize").each(function(){
             if ($(this).val() == webdough.mainSize) {
+              // $("*").removeClass("mainElement");
+              // $(this).addClass("mainElement");
               $(this).css('background-color', "#E2FFB0");
+              // console.log(mapToJson(changeFontSize));
+              changeFontSize = optimizedShuffle(changeFontSize, webdough.mainSize, safeSizes[0]);
+              $("#refresh").click(function(){
+                chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
+                  chrome.tabs.sendMessage(tabs[0].id, {todo: "FontSizeChange", newSize: mapToJson(changeFontSize)});
+                });
+              });
+
             }
           });
         }
@@ -147,24 +192,11 @@ $(function(){
 
 
 
-
-
-
-
-
-
-
-      // get the safe font-type
-      // var safeTypes = ["Arial Black", "Verdana", "Comic Sans MS", "Lucida Console", "Trebuchet MS", "Tahoma", "Impact"];
-      // safeTypes = shuffle(safeTypes);
-
-      console.log(mapToJson(changeFontSize));
-
       $("#refresh").click(function(){
         chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
-          chrome.tabs.sendMessage(tabs[0].id, {todo: "FontSizeChange", newSize: mapToJson(changeFontSize)});
+          // chrome.tabs.sendMessage(tabs[0].id, {todo: "FontSizeChange", newSize: mapToJson(changeFontSize), safeSizes: safeSizes});
           chrome.tabs.sendMessage(tabs[0].id, {todo: "changeColor", clickedColor: color});
-          // chrome.tabs.sendMessage(tabs[0].id, {todo: "changeFontType", safeTypes: safeTypes});
+          chrome.tabs.sendMessage(tabs[0].id, {todo: "changeFontType", safeTypes: safeTypes});
           // chrome.tabs.sendMessage(tabs[0].id, {todo: "changeFontSpacing", safeTypes: safeTypes});
         });
       });

@@ -99,10 +99,10 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse){
 	// }
 
 	if (request.todo == "changeFontType") {
-		$("*").css("font-family", request.safeTypes);
+		$("*").css("font-family", request.safeTypes.pop());
 	}
 
-	// 	// $(this).css("font-family", request.safeTypes.pop());
+		// $(this).css("font-family", request.safeTypes.pop());
 	// 	console.log(request.safeTypes);
 	// }
 
