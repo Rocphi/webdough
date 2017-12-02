@@ -4,6 +4,8 @@
 
 'use strict';
 
+// import {rgb2hex, hex} from "./utility.js";
+
 function isInArray(arr,value){
     if (arr.length == 0){
       return false;
@@ -39,9 +41,9 @@ var font_color = [];
 var font_type = [];
 var font_spacing = [];
 
-$("*").each(function(index){
+$("*").each(function(){
   var size = $(this).css('font-size');
-  // var spacing = $(this).css('line-height');
+  // size = parseFloat(size).toFixed(0) + "px";
   if(! isInArray(font_size,size)){
     font_size.push(size);
   }
@@ -71,6 +73,7 @@ $("*").each(function(index){
 
 
 var results = [];
+// alert(font_size);
 results.push(font_size);
 results.push(font_type);
 results.push(font_color);

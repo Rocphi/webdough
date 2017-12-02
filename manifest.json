@@ -22,6 +22,6 @@
     "persistent": false
   },
   
-  "permissions": [ "tabs", "webNavigation", "webRequestBlocking", "contextMenus", "storage", "*://*/*" ]
+  "permissions": [ "tabs", "activeTab", "webNavigation", "webRequestBlocking", "downloads", "contextMenus", "storage", "*://*/*" ]
 
 }
