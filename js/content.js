@@ -11,25 +11,28 @@ function jsonToMap(jsonStr){
     return  objToStrMap(JSON.parse(jsonStr));
 }
 
+// click to get the main element in the web-page
 document.onmousedown = function(e) {
 	var e = e ? e : window.event;
 	var tar = e.srcElement || e.target;
 	// var tarClass = tar.className;
 	// var tarId = tar.id;
 	var fontSize = $(tar).css("font-size");
+	// fontSize = parseFloat(fontSize).toFixed(0) + "px";
 	// console.log(tarClass);
 	console.log(fontSize);
+	console.log($(tar).css("font-family"));
 	chrome.storage.sync.set({"mainSize": fontSize});
 }
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse){
 	
 	// change the Background color
-	if (request.todo == "changeColor") {
-		var addColor = "#" + request.clickedColor;
-		console.log(addColor);
-		$("body").css("background-color", addColor);
-	}
+	// if (request.todo == "changeColor") {
+	// 	var addColor = "#" + request.clickedColor;
+	// 	console.log(addColor);
+	// 	$("body").css("background-color", addColor);
+	// }
 	
 	// change the image filter
 	if ( request.todo == "filterImg"){
@@ -64,20 +67,53 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse){
 		changeFontSize = jsonToMap(request.newSize);
 		console.log(changeFontSize);
 
-		for (var [key,value] of changeFontSize) {
-		    if (key == value){
-		        changeFontSize.delete(key);
-		    }
-		}
+		// for (var [key,value] of changeFontSize) {
+		//     if (key == value){
+		//         changeFontSize.delete(key);
+		//     }
+		// }
 
-		console.log(changeFontSize);
+		// for (var [key,value] of changeFontSize) {
+		//     if (parseFloat(value) > 32){
+		//         console.log("bbbbbbbb");
+		//     }
+		// }
+
+		console.log("hello");
+
 		$("*").each(function(){
 			var curSize = $(this).css('font-size');
-			if(changeFontSize.has(curSize)){
-			    $(this).css('font-size', changeFontSize.get(curSize));
-			    // console.log("hello world");
-  			}
+			// curSize = parseFloat(curSize).toFixed(0) + "px";
+
+			if(changeFontSize.has(curSize)) {
+				var targetSize = changeFontSize.get(curSize);
+				// if(curSize == "26px"){
+				    // $(this).css('font-size', "19px");
+					// console.log(targetSize);
+				$(this).css("font-size", targetSize);
+				// console.log(targetSize);
+				// console.log($(this).css("font-size"));
+				// console.log($(this).css("font-size"));
+				    // $(this).css('font-size', targetSize);
+	  			// } 
+			    // $(this).css('font-size', changeFontSize.get(curSize));
+  			} 
+  			// else {
+  			// 	// console.log(curSize);
+  			// 	console.log("Some Font-sizes are not captured!");
+  			// }
+  			// if(curSize == "14px"){
+			  //   $(this).css('font-size', "26px");
+  			// }
+  			// console.log($(this).css("font-size"));
+  			// console.log("\n\n");
 		});
+
+		// $("*").each(function(){
+		// 	var curSize = $(this).css('font-size');
+		// 	curSize = parseFloat(curSize).toFixed(0) + "px";
+		// 	console.log(curSize);
+		// });
 	}
 
 	// change the font type
@@ -99,13 +135,26 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse){
 	// }
 
 	if (request.todo == "changeFontType") {
-		$("*").css("font-family", request.safeTypes.pop());
+		// console.log(request.safeTypes);
+		// var fontType = "'" + request.safeTypes[0] + "', 'sans-serif'";
+		
+
+		$("*").each(function(){
+			var fontType = "'" + request.safeTypes[0] + "', 'sans-serif'";
+			var curType = $(this).css("font-family");
+			var preferedType = curType.split(",")[0];
+			if (request.safeTypes.indexOf(preferedType) < 0) {
+				$(this).css("font-family", fontType);
+			}
+		});
+
+		// $("*").css("font-family", fontType);
+
+		// console.log($("*").css("font-family"));
 	}
 
-		// $(this).css("font-family", request.safeTypes.pop());
-	// 	console.log(request.safeTypes);
-	// }
-
+ 	// chrome.runtime.sendMessage({}, function(response) { console.log("farewell"); });
 
 });
+
 

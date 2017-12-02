@@ -2,6 +2,9 @@
 // 1. Get the current tab;
 // 2. Do statistics of font_size,font_color,font_family,line_spacing
 
+function sleep (time) {
+  return new Promise((resolve) => setTimeout(resolve, time));
+}
 
 function strMapToObj(strMap) {
     let obj = Object.create(null);
@@ -36,11 +39,23 @@ function shuffle(array) {
     return array;
 }
 
-
+// change the fontsize to optimal values
 function optimizedShuffle(map, mainSize, optimizer){
+  console.log(mainSize);
+  console.log(optimizer);
+
+  // pick the diff value
   var diff = parseFloat(optimizer) - parseFloat(mainSize);
+  
+  // for every fontsize, change it according to the diff value
   for (var [key,value] of map) {
     value = parseFloat(value) + parseFloat(diff);
+
+    // limit the Max Font size
+    // if (value > 32) {value = 32;}
+    
+    // keep accuracy
+    // value = value.toFixed(0) + "px";
     value = value + "px";
     map.set(key, value);
   }
@@ -55,26 +70,29 @@ $(function(){
 
   var mainSize = "";
   var changeFontSize = new Map();
-  var safeTypes = ["Arial", "Verdana", "Trebuchet MS"];
-  // var safeSizes = ["16px", "19px", "22px"];
-  var safeSizes = ["19px", "16px"];
-  // console.log(safeTypes);
+  // var safeTypes = ["Trebuchet MS", "Arial", "Calibri", "Candara", "Helvetica", "Optima"];
+  var safeTypes = ["Comic Sans MS"];
+  var safeSizes = ["18px", "17px", "19px", "20px"];
+  // var safeSizes = ["16px", "19px", "22px", "24px","26px"];
+  // var safeSizes = ["26px"];
 
 
   // var current_tab_id;
   chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
+
     // alert(tabs[0].id);
-    chrome.tabs.executeScript(tabs[0].id, {file: "js/count_par.js"},function(font_results){
+    chrome.tabs.executeScript(tabs[0].id, {file: "js/count_par.js"}, function(font_results){
       //font_results[0] includes font_size,font_color,font_family,line_spacing and background-color in order.
       //font_size
 
       safeTypes = shuffle(safeTypes);
-      safeSizes = shuffle(safeSizes);
 
+      console.log(font_results[0][0]);
 
 
       var font_size_rows = "";
-      for(i=1;i<font_results[0][0].length;i++){
+
+      for(i=0;i<font_results[0][0].length;i++){
 
         font_size_rows = font_size_rows + '<tr class="font_size_row"> \
           <td>\
@@ -88,12 +106,12 @@ $(function(){
         changeFontSize.set(font_results[0][0][i], font_results[0][0][i]);
       }
       font_size_rows = font_size_rows + "<tr></tr>";
-      $("#font_size_row_first").children("td:first-child").attr("rowspan",String(font_results[0][0].length));
+      $("#font_size_row_first").children("td:first-child").attr("rowspan",String(font_results[0][0].length+1));
       $("#font_size_row_first").after(font_size_rows);
 
       //font_family(font_type)
       var font_family_rows="";
-      for(i=1;i<font_results[0][1].length;i++){
+      for(i=0;i<font_results[0][1].length;i++){
         font_family_rows = font_family_rows + '<tr class="font_family_row"> \
           <td>\
             <input type="text" value=\''+font_results[0][1][i]+'\'disabled="true"/>\
@@ -105,12 +123,12 @@ $(function(){
       }
       // console.log(font_family_rows);
       font_family_rows = font_family_rows + "<tr></tr>";
-      $("#font_family_row_first").children("td:first-child").attr("rowspan",String(font_results[0][1].length));
+      $("#font_family_row_first").children("td:first-child").attr("rowspan",String(font_results[0][1].length+1));
       $("#font_family_row_first").after(font_family_rows);
 
       //font_color
       var font_color_rows="";
-      for(i=1;i<font_results[0][2].length;i++){
+      for(i=0;i<font_results[0][2].length;i++){
         font_color_rows = font_color_rows + '<tr class="font_color_row"> \
           <td>\
             <input type="text" value=\''+font_results[0][2][i]+'\'disabled="true"/>\
@@ -122,12 +140,12 @@ $(function(){
       }
       font_color_rows = font_color_rows + "<tr></tr>";
 
-      $("#font_color_row_first").children("td:first-child").attr("rowspan",String(font_results[0][2].length));
+      $("#font_color_row_first").children("td:first-child").attr("rowspan",String(font_results[0][2].length+1));
       $("#font_color_row_first").after(font_color_rows);
 
       //line_spacing
       var line_spacing_rows = "";
-      for(i=1;i<font_results[0][3].length;i++){
+      for(i=0;i<font_results[0][3].length;i++){
         var line_spacing_rows = line_spacing_rows + '<tr class="line_spacing_row"> \
           <td>\
             <input type="text" value=\''+font_results[0][3][i]+'\'disabled="true"/>\
@@ -139,7 +157,7 @@ $(function(){
         // console.log(font_results[0][3][i]);
       }
 
-      $("#line_spacing_row_first").children("td:first-child").attr("rowspan",String(font_results[0][3].length));
+      $("#line_spacing_row_first").children("td:first-child").attr("rowspan",String(font_results[0][3].length+1));
       $("#line_spacing_row_first").after(line_spacing_rows);
       // console.log(font_results[0]);
       // console.log(font_results[0].length);
@@ -174,12 +192,15 @@ $(function(){
           // console.log(webdough.mainSize);
           $(".mySize").each(function(){
             if ($(this).val() == webdough.mainSize) {
-              // $("*").removeClass("mainElement");
-              // $(this).addClass("mainElement");
               $(this).css('background-color', "#E2FFB0");
-              // console.log(mapToJson(changeFontSize));
-              changeFontSize = optimizedShuffle(changeFontSize, webdough.mainSize, safeSizes[0]);
+
               $("#refresh").click(function(){
+                
+                safeSizes = shuffle(safeSizes);
+                console.log(mapToJson(changeFontSize));
+                changeFontSize = optimizedShuffle(changeFontSize, webdough.mainSize, safeSizes[0]);
+                console.log(mapToJson(changeFontSize));
+
                 chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
                   chrome.tabs.sendMessage(tabs[0].id, {todo: "FontSizeChange", newSize: mapToJson(changeFontSize)});
                 });
@@ -193,12 +214,15 @@ $(function(){
 
 
       $("#refresh").click(function(){
+        safeTypes = shuffle(safeTypes);
+        // console.log(safeTypes);
         chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
-          // chrome.tabs.sendMessage(tabs[0].id, {todo: "FontSizeChange", newSize: mapToJson(changeFontSize), safeSizes: safeSizes});
+
           chrome.tabs.sendMessage(tabs[0].id, {todo: "changeColor", clickedColor: color});
           chrome.tabs.sendMessage(tabs[0].id, {todo: "changeFontType", safeTypes: safeTypes});
           // chrome.tabs.sendMessage(tabs[0].id, {todo: "changeFontSpacing", safeTypes: safeTypes});
         });
+
       });
 
     });
@@ -211,12 +235,21 @@ $(function(){
   });
 
   $("#refresh").click(function(){
+
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
       chrome.tabs.sendMessage(tabs[0].id, {todo: "filterImg", clickedImgFilters: imgFilters});
     });
+
+    // sleep to wait for the modification of the website, then capture the screenShot
+    sleep(1500).then(() => {
+        chrome.tabs.captureVisibleTab(function(screenshotUrl) {
+          chrome.downloads.download({url: screenshotUrl});
+        });
+    });
+
   });
 
-
+  
 });
 
 
